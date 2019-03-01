@@ -22,7 +22,7 @@ we adhere to the [Contributor Covenant](https://www.contributor-covenant.org/), 
 used [code of conduct](/CODE_OF_CONDUCT.md) adopted by many other communities such as
 Linux, Ruby on Rails and GitLab.
 
-Everyone participating in the Autoware.Auto community is expcted to follow the code of
+Everyone participating in the Autoware.Auto community is expected to follow the code of
 conduct.
 
 If someone in the community happens to be violating these terms, please let the project
