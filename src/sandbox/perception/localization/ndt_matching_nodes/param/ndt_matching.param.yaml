@@ -1,0 +1,48 @@
+# config/pure_pursuit.param.yaml
+---
+
+float_ndt_matching_node:
+  ros__parameters:
+    timeout_ms:                  1000
+    points_topic:                "filtered_points"
+    odom_topic:                  "/vehicle/odom"
+    pose_topic:                  "ndt_pose"
+    diagnosis_topic:             "ctrl_diag"
+    map_file:                   "/home/yuki.tsuji/points_map.pcd"
+    tf_timeout:                  20
+    odom_minimum_rate:           100
+    qos_depth:                   10
+    num_max_odom_history:        5
+    static_frame_ids:
+      - "world"
+    dynamic_frame_ids:
+      - "base_link"
+      - "map"
+      - "camera0"
+      - "imu"
+      - "vlp16_front"
+    localizer:
+      resolution:         2.0
+      step_size:          0.1
+      translation_eps:    0.01
+      maximum_iteration:  30
+      use_initial_pose: true
+      initial_pose:
+        # x: 5889.9 #5873.62
+        # y: 158076.5 #157783.5625
+        # z: -30.6 #-32.4
+        # yaw: 3.0 #-1.7
+        # pitch: 0.0
+        # roll: 0.0
+        # x: 5887.9
+        # y: 158079.0
+        # z: -30.6
+        # yaw: 3.0
+        # pitch: 0.0
+        # roll: 0.0
+        x: 5902.78369141
+        y: 158066.984375
+        z: -30.9813766479
+        yaw: -1.6582236
+        pitch: 0.0
+        roll: 0.0

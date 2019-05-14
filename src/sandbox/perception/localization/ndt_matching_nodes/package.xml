@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+    <name>ndt_matching_nodes</name>
+    <version>0.0.1</version>
+    <description>ROS2 node wrappers around ndt matching</description>
+    <maintainer email="yuki.tsuji@apex.ai">Yuki Tsuji</maintainer>
+    <license>Apex.AI License</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <buildtool_depend>apex_cmake</buildtool_depend>
+
+    <depend>apex_auto_msgs</depend>
+    <depend>apex_tf</depend>
+    <depend>geometry_msgs</depend>
+    <depend>nav_msgs</depend>
+    <depend>sensor_msgs</depend>
+    <depend>apexcpp</depend>
+    <depend>helper_functions</depend>
+    <depend>ndt_matching</depend>
+    <depend>time_policies</depend>
+
+    <test_depend>ament_lint_common</test_depend>
+    <test_depend>ament_cmake_pclint</test_depend>
+    <test_depend>apex_integration_tests</test_depend>
+    <test_depend>geometry_msgs</test_depend>
+    <test_depend>tf2_msgs</test_depend>
+    <test_depend>std_msgs</test_depend>
+    <test_depend>rclcpp</test_depend>
+    <test_depend>apex_launchtest_cmake</test_depend>
+    <test_depend>apex_launchtest_ros</test_depend>
+
+    <export><build_type>ament_cmake</build_type></export>
+</package>
