@@ -41,7 +41,7 @@ namespace kalman_filter
 template<int NumStates, int ProcessNoiseDim>
 class Esrcf
 {
-  using state_vec_t = typename SrcfCore<NumStates, ProcessNoiseDim>::state_vec_t;
+  using state_vec_float_t = typename SrcfCore<NumStates, ProcessNoiseDim>::state_vec_float_t;
   using square_mat_float_t = typename SrcfCore<NumStates, ProcessNoiseDim>::square_mat_float_t;
 
 public:
@@ -66,7 +66,7 @@ public:
   Esrcf(
     motion::motion_model::MotionModel<NumStates> & model,
     const Eigen::Matrix<float, NumStates, ProcessNoiseDim> & GQ_chol_prod,
-    const state_vec_t & x0,
+    const state_vec_float_t & x0,
     const square_mat_float_t & P0_chol)
   : Esrcf(model, GQ_chol_prod)
   {
@@ -75,7 +75,7 @@ public:
 
   /// \brief Update state externally
   /// \param[in] x0 New state
-  void reset(const state_vec_t & x0)
+  void reset(const state_vec_float_t & x0)
   {
     m_model_ptr->reset(x0);
   }
@@ -84,7 +84,7 @@ public:
   /// \brief Initialize state and covariance
   /// \param[in] x0 initial state
   /// \param[in] P0_chol cholesky factor of initial covariance matrix
-  void reset(const state_vec_t & x0, const square_mat_float_t & P0_chol)
+  void reset(const state_vec_float_t & x0, const square_mat_float_t & P0_chol)
   {
     reset(x0);
     m_square_mat2 = P0_chol;
@@ -154,7 +154,7 @@ public:
   /// \param[in] self_transition_prob Probability an object following this model
   ///                                 continues to follow this motion model in the next time step
   /// \param[in] x_mix The mixed state vector for this model
-  void imm_self_mix(const float self_transition_prob, const state_vec_t & x_mix)
+  void imm_self_mix(const float self_transition_prob, const state_vec_float_t & x_mix)
   {
     m_state_tmp = m_model_ptr->get_state();
     m_state_tmp -= x_mix;
@@ -179,7 +179,7 @@ public:
   /// \param[in] rank_other Rank of cov_other, e.g. number of columns to zero out
   void imm_other_mix(
     const float other_transition_prob,
-    const state_vec_t & x_other,
+    const state_vec_float_t & x_other,
     square_mat_float_t & cov_other,
     const index_t rank_other = NumStates)
   {
@@ -204,7 +204,7 @@ public:
 private:
   SrcfCore<NumStates, ProcessNoiseDim> m_srcf_core;
   motion::motion_model::MotionModel<NumStates> * const m_model_ptr;
-  state_vec_t m_state_tmp;
+  state_vec_float_t m_state_tmp;
   square_mat_float_t m_square_mat1;
   square_mat_float_t m_square_mat2;
   bool m_is_mat1_covariance;

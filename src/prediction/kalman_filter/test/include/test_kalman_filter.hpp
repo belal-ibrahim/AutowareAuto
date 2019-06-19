@@ -200,13 +200,13 @@ for the second update
 */
 TEST(srcf_core, degenerate)
 {
-  const float eps = 1.0E-6F;
+  const double eps = 1.0E-6F;
   EXPECT_LT(fabsf((1.0F + (eps * eps)) - 1), TOL);
-  const float sigma = 1.0F / eps;
-  Matrix<float, 2, 2> H, C;
+  const double sigma = 1.0F / eps;
+  Matrix<double, 2, 2> H, C;
   H << 1, eps, 1, 1;
   C << sigma * sigma, 0, 0, sigma * sigma;
-  Matrix<float, 2, 1> R({1, 1}), x;
+  Matrix<double, 2, 1> R({1, 1}), x;
   // cholesky on C
   int info = 1;
   Eigen::LLT<Eigen::Ref<decltype(C)>> llt(C);
@@ -216,7 +216,7 @@ TEST(srcf_core, degenerate)
   // TODO(ltbj): implement memory_test after the completion of #39
   // osrf_testing_tools_cpp::memory_test::start();
   // update
-  float ll = core.scalar_update(0, R(0), H.row(0), C, x);
+  double ll = core.scalar_update(0, R(0), H.row(0), C, x);
   EXPECT_LT(fabsf(C(0, 0) - sqrtf(2)), TOL);
   EXPECT_LT(fabsf(C(1, 0) - (-sqrtf(2) * sigma / 2)), TOL);
   EXPECT_LT(fabsf(C(1, 1) - sqrtf(2) * sigma / 2), TOL);

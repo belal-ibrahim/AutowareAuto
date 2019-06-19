@@ -33,9 +33,10 @@ template<int NumStates, int ProcessNoiseDim>
 class SrcfCore
 {
 public:
-  using state_vec_t = Eigen::Matrix<float, NumStates, 1>;
+  using state_vec_float_t = Eigen::Matrix<float, NumStates, 1>;
   using square_mat_float_t = Eigen::Matrix<float, NumStates, NumStates>;
 
+  using state_vec_double_t = Eigen::Matrix<double, NumStates, 1>;
   using square_mat_double_t = Eigen::Matrix<double, NumStates, NumStates>;
 
   /// \brief Applies the right triangularization operation on a single row, e.g.
@@ -166,13 +167,15 @@ public:
   /// \param[inout] x the state vector, gets updated
   /// \return log-likelihood of this scalar observation
   /// \throw std::domain_error if r is not positive
-  template<typename Derived, typename ValueType, typename SquareMatType>
+  template<typename Derived, typename ValueType, typename SquareMatType, typename StateVecType>
   ValueType scalar_update_common(
     const ValueType z,
     const ValueType r,
     const Eigen::MatrixBase<Derived> & h,
     SquareMatType & C,
-    state_vec_t & x)
+    StateVecType & x,
+    StateVecType & k,
+    StateVecType & tau)
   {
     // This implementation is adapted from the lower triangle update in
     // "Estimation with Applications to Tracking and Navigation" Bar-shalom & Li,
@@ -184,7 +187,7 @@ public:
       throw std::domain_error("ScrfCore: measurement noise variance must be positive");
     }
     ValueType alpha = r;
-    m_k.setZero();
+    k.setZero();
     for (index_t idx = NumStates - 1; idx < NumStates && idx >= 0; --idx) {
       const index_t jdx = NumStates - idx;
       Eigen::Block<SquareMatType> col = C.block(idx, idx, jdx, 1);
@@ -195,15 +198,15 @@ public:
       const ValueType beta = alpha;
       // alpha_j = alpha_{j-1} + (f_j^2)
       alpha += (sigma * sigma);
-      m_tau.block(0, 0, jdx, 1) = col;
+      tau.block(0, 0, jdx, 1) = col;
       const ValueType zetap = -sigma / beta;  // beta is positive if R is positive
       // Update covariance column C_j = -K_{j-1} * (f_j / beta) + C_j
-      col += zetap * m_k.block(idx, 0, jdx, 1);
+      col += zetap * k.block(idx, 0, jdx, 1);
       const ValueType etap = sqrtf(beta / alpha);  // alpha positive if beta is
       // scale by diagonal factor C_j = C_j * sqrt(beta / alpha)
       col *= etap;
       // accumulate unscaled kalman gain: K = K + f_j * C_{j, -}
-      m_k.block(idx, 0, jdx, 1) += sigma * m_tau.block(0, 0, jdx, 1);
+      k.block(idx, 0, jdx, 1) += sigma * tau.block(0, 0, jdx, 1);
     }
     const ValueType del = z - (h * x)(0, 0);
 
@@ -214,7 +217,7 @@ public:
     }
     // Update state vector by error * unscaled kalman_gain
     const ValueType del_alpha = del / alpha;
-    x += del_alpha * m_k;
+    x += del_alpha * k;
 
     // constant for computation (logf isn't constexpr due to errno)
     constexpr ValueType logf2pi = 1.83787706641F;
@@ -229,9 +232,9 @@ public:
     const float r,
     const Eigen::MatrixBase<Derived> & h,
     square_mat_float_t & C,
-    state_vec_t & x)
+    state_vec_float_t & x)
   {
-    return scalar_update_common(z, r, h, C, x);
+    return scalar_update_common(z, r, h, C, x, m_k_float, m_tau_float);
   }
 
   template<typename Derived>
@@ -240,14 +243,18 @@ public:
     const double r,
     const Eigen::MatrixBase<Derived> & h,
     square_mat_double_t & C,
-    state_vec_t & x)
+    state_vec_double_t & x)
   {
-    return scalar_update_common(z, r, h, C, x);
+    return scalar_update_common(z, r, h, C, x, m_k_double, m_tau_double);
   }
 
 private:
-  state_vec_t m_tau;
-  state_vec_t m_k;
+  state_vec_float_t m_tau_float;
+  state_vec_float_t m_k_float;
+
+  state_vec_double_t m_tau_double;
+  state_vec_double_t m_k_double;
+
   static_assert(NumStates > 0U, "must have positive number of states");
   static_assert(ProcessNoiseDim > 0U, "must have positive number of process noise dimensions");
 };  // class SrcfCore
