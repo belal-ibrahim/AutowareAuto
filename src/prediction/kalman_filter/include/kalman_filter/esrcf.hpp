@@ -42,7 +42,7 @@ template<int NumStates, int ProcessNoiseDim>
 class Esrcf
 {
   using state_vec_t = typename SrcfCore<NumStates, ProcessNoiseDim>::state_vec_t;
-  using square_mat_t = typename SrcfCore<NumStates, ProcessNoiseDim>::square_mat_t;
+  using square_mat_float_t = typename SrcfCore<NumStates, ProcessNoiseDim>::square_mat_float_t;
 
 public:
   /// \brief constructor
@@ -67,7 +67,7 @@ public:
     motion::motion_model::MotionModel<NumStates> & model,
     const Eigen::Matrix<float, NumStates, ProcessNoiseDim> & GQ_chol_prod,
     const state_vec_t & x0,
-    const square_mat_t & P0_chol)
+    const square_mat_float_t & P0_chol)
   : Esrcf(model, GQ_chol_prod)
   {
     reset(x0, P0_chol);
@@ -84,7 +84,7 @@ public:
   /// \brief Initialize state and covariance
   /// \param[in] x0 initial state
   /// \param[in] P0_chol cholesky factor of initial covariance matrix
-  void reset(const state_vec_t & x0, const square_mat_t & P0_chol)
+  void reset(const state_vec_t & x0, const square_mat_float_t & P0_chol)
   {
     reset(x0);
     m_square_mat2 = P0_chol;
@@ -93,7 +93,7 @@ public:
 
   /// \brief Get covariance
   /// \return const reference to current covariance matrix
-  const square_mat_t & get_covariance() const
+  const square_mat_float_t & get_covariance() const
   {
     return m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
   }
@@ -103,8 +103,8 @@ public:
   void temporal_update(const std::chrono::nanoseconds & dt)
   {
     // alternate which matrix you store F * C in to take advantage of efficient matrix mult
-    const square_mat_t & cov_mat = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
-    square_mat_t & jac_mat = m_is_mat1_covariance ? m_square_mat2 : m_square_mat1;
+    const square_mat_float_t & cov_mat = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
+    square_mat_float_t & jac_mat = m_is_mat1_covariance ? m_square_mat2 : m_square_mat1;
     // compute jacobian and predict
     m_model_ptr->compute_jacobian_and_predict(jac_mat, dt);
     //// update covariance matrix
@@ -129,7 +129,7 @@ public:
     const Eigen::Matrix<float, NumObs, NumStates> & H,
     const Eigen::Matrix<float, NumObs, 1U> & R_diag)
   {
-    square_mat_t & cov_mat = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
+    square_mat_float_t & cov_mat = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
     // This is ugly, but promotes encapsulation
     m_state_tmp = m_model_ptr->get_state();
     // do sequential update
@@ -159,7 +159,7 @@ public:
     m_state_tmp = m_model_ptr->get_state();
     m_state_tmp -= x_mix;
     const float sq_prob = sqrtf(self_transition_prob);
-    square_mat_t & cov = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
+    square_mat_float_t & cov = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
     cov *= sq_prob;
     m_state_tmp *= sq_prob;
     m_srcf_core.right_lower_triangularize_matrices(cov, m_state_tmp);
@@ -180,7 +180,7 @@ public:
   void imm_other_mix(
     const float other_transition_prob,
     const state_vec_t & x_other,
-    square_mat_t & cov_other,
+    square_mat_float_t & cov_other,
     const index_t rank_other = NumStates)
   {
     // compute dx = x_other - x_mix
@@ -190,7 +190,7 @@ public:
     const float sq_prob = sqrtf(other_transition_prob);
     m_state_tmp *= sq_prob;
     cov_other *= sq_prob;
-    square_mat_t & cov = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
+    square_mat_float_t & cov = m_is_mat1_covariance ? m_square_mat1 : m_square_mat2;
     // triangularize stacked matrix [C_self / sq(u) * C_other / sq(u) * (x_other - x_mix)]
     for (index_t i = index_t(); i < NumStates; ++i) {
       // For each element in column, starting from the bottom
@@ -205,8 +205,8 @@ private:
   SrcfCore<NumStates, ProcessNoiseDim> m_srcf_core;
   motion::motion_model::MotionModel<NumStates> * const m_model_ptr;
   state_vec_t m_state_tmp;
-  square_mat_t m_square_mat1;
-  square_mat_t m_square_mat2;
+  square_mat_float_t m_square_mat1;
+  square_mat_float_t m_square_mat2;
   bool m_is_mat1_covariance;
   Eigen::Matrix<float, NumStates, ProcessNoiseDim> m_B_mat;
   const Eigen::Matrix<float, NumStates, ProcessNoiseDim> * m_GQ_chol_prod_ptr;

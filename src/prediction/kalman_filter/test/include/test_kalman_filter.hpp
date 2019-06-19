@@ -262,13 +262,13 @@ TEST(srcf_core, propagation)
 TEST(srcf_core, triangularization)
 {
   SrcfCore<3, 1> core;
-  Matrix<float, 3, 3> A;
+  Matrix<double, 3, 3> A;
   A <<
     1, 1, 1,
     1, -1, 1,
     1, 1, 0;
-  Matrix<float, 3, 3> C(A), D(A), E(A);
-  Matrix<float, 3, 1> B;  // zero
+  Matrix<double, 3, 3> C(A), D(A), E(A);
+  Matrix<double, 3, 1> B;  // zero
   // TODO(ltbj): implement memory_test after the completion of #39
   // osrf_testing_tools_cpp::memory_test::start();
   core.right_lower_triangularize_matrices(A, B);
