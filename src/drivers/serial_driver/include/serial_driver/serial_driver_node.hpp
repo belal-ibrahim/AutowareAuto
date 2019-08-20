@@ -202,7 +202,7 @@ private:
   {
     boost::system::error_code serial_error;
     constexpr size_t max_data_size = 64 * 1024;
-    const size_t len = boost::asio::read(m_serial_port, boost::asio::buffer(&pkt,
+    const size_t len = boost::asio::read(port, boost::asio::buffer(&pkt,
         max_data_size), boost::asio::transfer_exactly(sizeof(pkt)),
         serial_error);
 
