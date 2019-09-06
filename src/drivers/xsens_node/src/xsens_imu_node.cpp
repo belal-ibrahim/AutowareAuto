@@ -35,8 +35,8 @@ XsensImuNode::XsensImuNode(
   parity_t parity,
   stop_bits_t stop_bits,
   const std::string & frame_id,
-  const xsens_driver::XsensTranslator::Config & config)
-: SerialDriverNode<XsensImuNode, xsens_driver::XsensTranslator::Packet, sensor_msgs::msg::Imu>(
+  const xsens_driver::XsensImuTranslator::Config & config)
+: SerialDriverNode<XsensImuNode, xsens_driver::XsensImuTranslator::Packet, sensor_msgs::msg::Imu>(
     node_name,
     topic,
     device_name,
@@ -68,7 +68,7 @@ void XsensImuNode::init_output(sensor_msgs::msg::Imu & output)
 
 ////////////////////////////////////////////////////////////////////////////////
 bool XsensImuNode::convert(
-  const xsens_driver::XsensTranslator::Packet & pkt,
+  const xsens_driver::XsensImuTranslator::Packet & pkt,
   sensor_msgs::msg::Imu & output)
 {
   m_imu.push_back(output);

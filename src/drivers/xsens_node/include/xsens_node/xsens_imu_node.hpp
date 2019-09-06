@@ -45,7 +45,7 @@ using autoware::drivers::serial_driver::stop_bits_t;
 class XSENS_NODE_PUBLIC XsensImuNode
   : public serial_driver::SerialDriverNode<
     XsensImuNode,
-    xsens_driver::XsensTranslator::Packet,
+    xsens_driver::XsensImuTranslator::Packet,
     sensor_msgs::msg::Imu>
 {
 public:
@@ -69,7 +69,7 @@ public:
     parity_t parity,
     stop_bits_t stop_bits,
     const std::string & frame_id,
-    const xsens_driver::XsensTranslator::Config & config);
+    const xsens_driver::XsensImuTranslator::Config & config);
 
   /// \brief Parameter file constructor
   /// \param[in] node_name Name of this node
@@ -80,12 +80,12 @@ public:
 
   void init_output(sensor_msgs::msg::Imu & output);
   bool convert(
-    const xsens_driver::XsensTranslator::Packet & pkt,
+    const xsens_driver::XsensImuTranslator::Packet & pkt,
     sensor_msgs::msg::Imu & output);
   bool get_output_remainder(sensor_msgs::msg::Imu & output);
 
 private:
-  xsens_driver::XsensTranslator m_translator;
+  xsens_driver::XsensImuTranslator m_translator;
 
   const std::string m_frame_id;
 

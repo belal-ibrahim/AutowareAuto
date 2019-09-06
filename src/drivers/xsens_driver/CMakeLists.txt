@@ -29,8 +29,11 @@ include_directories(include)
 
 ### Build driver library
 add_library(${PROJECT_NAME} SHARED
+        "include/xsens_driver/xsens_common.hpp"
+        "include/xsens_driver/xsens_base_translator.hpp"
         "include/xsens_driver/xsens_imu_translator.hpp"
         "include/xsens_driver/visibility_control.hpp"
+        "src/xsens_common.cpp"
         "src/xsens_imu_config.cpp"
         "src/xsens_imu_translator.cpp")
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
@@ -49,6 +52,7 @@ if(BUILD_TESTING)
     find_package(ament_cmake_gtest REQUIRED)
     set(XSENS_GTEST xsens_gtest)
     ament_add_gtest(${XSENS_GTEST}
+    "src/xsens_common.cpp"
       "test/src/test_xsens_imu.cpp")
     target_include_directories(${XSENS_GTEST} PRIVATE test/include include)
     target_link_libraries(${XSENS_GTEST} ${PROJECT_NAME})
