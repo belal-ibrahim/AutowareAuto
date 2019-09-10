@@ -27,6 +27,8 @@
 #include "xsens_driver/xsens_common.hpp"
 #include "xsens_driver/xsens_imu_translator.hpp"
 
+#include "helper_functions/byte_reader.hpp"
+
 namespace autoware
 {
 namespace drivers
@@ -125,13 +127,10 @@ void XsensImuTranslator::parse_acceleration_internal(
   constexpr std::size_t kNumber_of_values = 3;
   MessageT values[kNumber_of_values];
 
-  std::size_t array_size = sizeof(MessageT);
+  autoware::common::helper_functions::ByteReader byte_reader(content);
 
-  // Bytes comes in big-endian, so we need to re-store them in little-endian
-  for (std::size_t i = 0; i < array_size; ++i) {
-    for (std::size_t j = 0; j < kNumber_of_values; ++j) {
-      reinterpret_cast<uint8_t *>(&values[j])[i] = content[array_size * (j + 1) - i - 1];
-    }
+  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
+    byte_reader.read(values[i]);
   }
 
   message.linear_acceleration.x = values[0];
@@ -222,13 +221,10 @@ void XsensImuTranslator::parse_orientation_quaternion(
   constexpr std::size_t kNumber_of_values = 4;
   MessageT values[kNumber_of_values];
 
-  std::size_t array_size = sizeof(MessageT);
+  autoware::common::helper_functions::ByteReader byte_reader(content);
 
-  // Bytes comes in big-endian, so we need to re-store them in little-endian
-  for (std::size_t i = 0; i < array_size; ++i) {
-    for (std::size_t j = 0; j < kNumber_of_values; ++j) {
-      reinterpret_cast<uint8_t *>(&values[j])[i] = content[array_size * (j + 1) - i - 1];
-    }
+  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
+    byte_reader.read(values[i]);
   }
 
   message.orientation.x = values[0];
@@ -245,13 +241,10 @@ void XsensImuTranslator::parse_angular_velocity_rate_of_turn(
   constexpr std::size_t kNumber_of_values = 3;
   MessageT values[kNumber_of_values];
 
-  std::size_t array_size = sizeof(MessageT);
+  autoware::common::helper_functions::ByteReader byte_reader(content);
 
-  // Bytes comes in big-endian, so we need to re-store them in little-endian
-  for (std::size_t i = 0; i < array_size; ++i) {
-    for (std::size_t j = 0; j < kNumber_of_values; ++j) {
-      reinterpret_cast<uint8_t *>(&values[j])[i] = content[array_size * (j + 1) - i - 1];
-    }
+  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
+    byte_reader.read(values[i]);
   }
 
   message.angular_velocity.x = values[0];

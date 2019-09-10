@@ -23,7 +23,6 @@
 
 #include <iomanip>
 
-#include "sensor_msgs/msg/imu.hpp"
 #include "xsens_driver/xsens_common.hpp"
 
 namespace autoware
