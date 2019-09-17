@@ -19,6 +19,7 @@ project(xsens_driver)
 
 ## dependencies
 find_package(autoware_auto_cmake REQUIRED)
+find_package(autoware_auto_helper_functions REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(lidar_utils REQUIRED)
@@ -40,6 +41,7 @@ add_library(${PROJECT_NAME} SHARED
         "src/xsens_imu_translator.cpp")
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 ament_target_dependencies(${PROJECT_NAME}
+  "autoware_auto_helper_functions"
   "lidar_utils"
   "sensor_msgs"
 )
