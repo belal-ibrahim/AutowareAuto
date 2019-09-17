@@ -28,14 +28,26 @@ find_package(lidar_utils REQUIRED)
 
 include_directories(include)
 
-# The library that generates PointCloud2 is separate so that we don't have to lug around unused code
-set(CLOUD_LIB xsens_imu_node)
-add_library(${CLOUD_LIB} SHARED
-  include/xsens_node/xsens_imu_node.hpp
+set(XSENS_IMU_NODE_LIB xsens_imu_node)
+add_library(${XSENS_IMU_NODE_LIB} SHARED
+  include/xsens_node/xsens_common_node.hpp
   include/xsens_node/visibility_control.hpp
   src/xsens_imu_node.cpp)
-autoware_set_compile_options(${CLOUD_LIB})
-ament_target_dependencies(${CLOUD_LIB}
+autoware_set_compile_options(${XSENS_IMU_NODE_LIB})
+ament_target_dependencies(${XSENS_IMU_NODE_LIB}
+  "lidar_utils"
+  "rclcpp_lifecycle"
+  "xsens_driver"
+  "serial_driver"
+  "sensor_msgs")
+
+set(XSENS_GPS_NODE_LIB xsens_gps_node)
+add_library(${XSENS_GPS_NODE_LIB} SHARED
+  include/xsens_node/xsens_common_node.hpp
+  include/xsens_node/visibility_control.hpp
+  src/xsens_gps_node.cpp)
+autoware_set_compile_options(${XSENS_GPS_NODE_LIB})
+ament_target_dependencies(${XSENS_GPS_NODE_LIB}
   "lidar_utils"
   "rclcpp_lifecycle"
   "xsens_driver"
@@ -44,10 +56,16 @@ ament_target_dependencies(${CLOUD_LIB}
 
 # generate executable for ros1-style standalone nodes
 file(COPY param/xsens_test.param.yaml DESTINATION "${CMAKE_BINARY_DIR}/param")  #copy the param file into the build directory
-set(CLOUD_EXEC "xsens_imu_node_exe")
-add_executable(${CLOUD_EXEC} src/xsens_imu_node_main.cpp)
-autoware_set_compile_options(${CLOUD_EXEC})
-target_link_libraries(${CLOUD_EXEC} ${CLOUD_LIB})
+set(XSENS_IMU_NODE_EXE "xsens_imu_node_exe")
+add_executable(${XSENS_IMU_NODE_EXE} src/xsens_imu_node_main.cpp)
+autoware_set_compile_options(${XSENS_IMU_NODE_EXE})
+target_link_libraries(${XSENS_IMU_NODE_EXE} ${XSENS_IMU_NODE_LIB})
+
+file(COPY param/xsens_test.param.yaml DESTINATION "${CMAKE_BINARY_DIR}/param")  #copy the param file into the build directory
+set(XSENS_GPS_NODE_EXE "xsens_gps_node_exe")
+add_executable(${XSENS_GPS_NODE_EXE} src/xsens_gps_node_main.cpp)
+autoware_set_compile_options(${XSENS_GPS_NODE_EXE})
+target_link_libraries(${XSENS_GPS_NODE_EXE} ${XSENS_IMU_NODE_LIB})
 
 if(BUILD_TESTING)
     autoware_static_code_analysis()
@@ -55,15 +73,15 @@ endif()
 
 ## install stuff
 autoware_install(
-  LIBRARIES  ${CLOUD_LIB}
-  EXECUTABLES ${CLOUD_EXEC}
+  LIBRARIES  ${XSENS_IMU_NODE_LIB} ${XSENS_GPS_NODE_LIB}
+  EXECUTABLES ${XSENS_IMU_NODE_EXE} ${XSENS_GPS_NODE_EXE}
 )
 
-# workaround to disable sign conversion errors from sensor_msgs::PointCloud2Iterator
-target_compile_options(${CLOUD_LIB} PRIVATE -Wno-sign-conversion -Wno-conversion)
-target_compile_options(${CLOUD_EXEC} PRIVATE -Wno-sign-conversion -Wno-conversion)
+target_compile_options(${XSENS_IMU_NODE_LIB} PRIVATE -Wno-sign-conversion -Wno-conversion)
+target_compile_options(${XSENS_IMU_NODE_EXE} PRIVATE -Wno-sign-conversion -Wno-conversion)
+target_compile_options(${XSENS_GPS_NODE_LIB} PRIVATE -Wno-sign-conversion -Wno-conversion)
+target_compile_options(${XSENS_GPS_NODE_EXE} PRIVATE -Wno-sign-conversion -Wno-conversion)
 
 # Ament Exporting
 ament_export_dependencies("sensor_msgs" "xsens_driver" "serial_driver")
-ament_export_interfaces(${BLOCK_EXEC})
 ament_package()
