@@ -52,11 +52,11 @@ if(BUILD_TESTING)
     include_directories(include)
     # gtest
     find_package(ament_cmake_gtest REQUIRED)
-    # set(XSENS_IMU_GTEST xsens_imu_gtest)
-    # ament_add_gtest(${XSENS_IMU_GTEST}
-    #   "test/src/test_xsens_imu.cpp")
-    # target_include_directories(${XSENS_IMU_GTEST} PRIVATE test/include include)
-    # target_link_libraries(${XSENS_IMU_GTEST} ${PROJECT_NAME})
+    set(XSENS_IMU_GTEST xsens_imu_gtest)
+    ament_add_gtest(${XSENS_IMU_GTEST}
+      "test/src/test_xsens_imu.cpp")
+    target_include_directories(${XSENS_IMU_GTEST} PRIVATE test/include include)
+    target_link_libraries(${XSENS_IMU_GTEST} ${PROJECT_NAME})
 
     set(XSENS_GPS_GTEST xsens_gps_gtest)
     ament_add_gtest(${XSENS_GPS_GTEST}
