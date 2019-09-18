@@ -214,7 +214,7 @@ private:
   }
 
   void init_port(
-    const std::string & device_name, uint16_t baud_rate, flow_control_t flow_control,
+    const std::string & device_name, uint32_t baud_rate, flow_control_t flow_control,
     parity_t parity, stop_bits_t stop_bits)
   {
     m_serial_port.open(device_name);
