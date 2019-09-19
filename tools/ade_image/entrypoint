@@ -34,6 +34,10 @@ groupdel video &> /dev/null || true
 groupadd -og "${VIDEO_GROUP_ID}" video
 gpasswd -a "${USER}" video
 
+groupdel dialout &> /dev/null || true
+groupadd -og "${DIALOUT_GROUP_ID}" dialout
+gpasswd -a "${USER}" dialout
+
 
 for x in /etc/skel/.*; do
     target="/home/$USER/$(basename "$x")"
