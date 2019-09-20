@@ -34,7 +34,7 @@ public:
 
 protected:
   XsensGpsTranslator::Packet pkt;
-  std::vector<sensor_msgs::msg::NavSatFix> out;
+  sensor_msgs::msg::NavSatFix out;
 };  // class xsens_driver
 
 TEST_F(xsens_driver, basic)
@@ -68,9 +68,9 @@ TEST_F(xsens_driver, basic)
   pkt.data = data[length];
   ASSERT_TRUE(driver.convert(pkt, out));
 
-  ASSERT_FLOAT_EQ(37.4246, out[0].latitude);
-  ASSERT_FLOAT_EQ(-122.10012, out[0].longitude);
-  ASSERT_FLOAT_EQ(-16.188999, out[0].altitude);
+  ASSERT_FLOAT_EQ(37.4246, out.latitude);
+  ASSERT_FLOAT_EQ(-122.10012, out.longitude);
+  ASSERT_FLOAT_EQ(-16.188999, out.altitude);
 }
 
 int32_t main(int32_t argc, char ** argv)

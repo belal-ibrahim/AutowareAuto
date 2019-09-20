@@ -35,7 +35,7 @@ public:
 
 protected:
   XsensImuTranslator::Packet pkt;
-  std::vector<sensor_msgs::msg::Imu> out;
+  sensor_msgs::msg::Imu out;
 };  // class xsens_driver
 
 TEST_F(xsens_driver, basic)

@@ -111,11 +111,9 @@ public:
     const typename TranslatorT::Packet & pkt,
     MessageT & output)
   {
-    m_imu.push_back(output);
-    m_translator.convert(pkt, m_imu);
-    m_imu.clear();
-    return true;
+    return m_translator.convert(pkt, output);
   }
+
   bool get_output_remainder(MessageT & output)
   {
     (void)output;

@@ -81,7 +81,7 @@ public:
     }
   }
 
-  bool convert(const Packet & pkt, std::vector<MessageT> & output)
+  bool convert(const Packet & pkt, MessageT & output)
   {
     switch (current_state_) {
       case State::START:
@@ -144,11 +144,9 @@ public:
     return false;
   }
 
-  void parse_mtdata2(std::vector<MessageT> & output)
+  void parse_mtdata2(MessageT & output)
   {
     auto data = raw_message_;
-
-    MessageT message;
 
     while (data.size() > 0) {
       int32_t data_id = data[1] | data[0] << 8;
@@ -164,9 +162,8 @@ public:
 
       int32_t group = data_id & 0xF800;
       XDIGroup xdigroup = XDIGroup_from_int(static_cast<uint16_t>(group));
-      this->impl().parse_xdigroup_mtdata2(xdigroup, message, data_id, content);
+      this->impl().parse_xdigroup_mtdata2(xdigroup, output, data_id, content);
     }
-    output.push_back(message);
   }
 };
 
