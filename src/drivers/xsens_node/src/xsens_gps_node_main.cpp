@@ -33,7 +33,7 @@ int32_t main(const int32_t argc, char ** const argv)
     rclcpp::init(argc, argv);
 
     auto vptr = std::make_shared<autoware::drivers::xsens_node::XsensGpsNode>(
-      "xsens_driver_node");
+      "xsens_gps_driver_node");
 
     vptr->run();
 
