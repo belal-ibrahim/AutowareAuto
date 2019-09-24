@@ -146,8 +146,8 @@ public:
     auto data = raw_message_;
 
     while (!data.empty()) {
-      int32_t data_id = data[1] | data[0] << 8;
-      int32_t message_size = data[2];
+      const int32_t data_id = data[1] | data[0] << 8;
+      const int32_t message_size = data[2];
 
       auto content = decltype(data)(
         std::begin(data) + 3,
