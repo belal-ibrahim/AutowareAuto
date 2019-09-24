@@ -19,6 +19,7 @@
 #define HELPER_FUNCTIONS__BYTE_READER_HPP_
 
 #include <cstdint>
+#include <cstring>
 #include <vector>
 
 namespace autoware
@@ -45,7 +46,7 @@ public:
   {
     std::size_t type_size = sizeof(T);
     for (std::size_t i = 0; i < type_size; ++i) {
-      reinterpret_cast<uint8_t *>(&value)[i] = byte_vector_[index_ + type_size - 1 - i];
+      std::memcpy(&value + i * sizeof(uint8_t), &byte_vector_[index_ + type_size - 1 - i], 1);
     }
     index_ += type_size;
   }
