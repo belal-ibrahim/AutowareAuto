@@ -37,7 +37,7 @@ private:
 public:
   explicit ByteReader(const std::vector<uint8_t> & byte_vector)
   : byte_vector_(byte_vector),
-    index_(0)
+    index_(0U)
   {
   }
 
@@ -45,7 +45,7 @@ public:
   void read(T & value)
   {
     std::size_t type_size = sizeof(T);
-    for (std::size_t i = 0; i < type_size; ++i) {
+    for (std::size_t i = 0U; i < type_size; ++i) {
       std::memcpy(&value + i * sizeof(uint8_t), &byte_vector_[index_ + type_size - 1 - i], 1);
     }
     index_ += type_size;
