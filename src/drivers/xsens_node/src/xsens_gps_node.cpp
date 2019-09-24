@@ -13,26 +13,4 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-#include <vector>
-#include "xsens_driver/xsens_gps_translator.hpp"
-#include "xsens_node/visibility_control.hpp"
-#include "xsens_node/xsens_common_node.hpp"
-#include "sensor_msgs/msg/nav_sat_fix.hpp"
-
-
-namespace autoware
-{
-namespace drivers
-{
-/// \brief Resources for nodes that use the `xsens_driver`
-namespace xsens_node
-{
-
-using XsensImuNode = XsensCommonNode<
-  xsens_driver::XsensGpsTranslator, sensor_msgs::msg::NavSatFix
->;
-
-}  // namespace xsens_node
-}  // namespace drivers
-}  // namespace autoware
+#include "xsens_node/xsens_gps_node.hpp"
