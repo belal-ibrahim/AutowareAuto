@@ -58,8 +58,6 @@ protected:
 
   std::vector<uint8_t> raw_message_;
 
-  std::mutex raw_message_mutex_;
-
   State current_state_;
 
   MID current_mid_;
@@ -107,7 +105,6 @@ public:
         current_state_ = State::LENGTH_READ;
         return false;
       case State::LENGTH_READ:
-        std::lock_guard<std::mutex> lock(raw_message_mutex_);
         if (raw_message_.size() == current_length_) {
           std::size_t checksum = 0xFF;
           // NOTE(esteve): workaround for uncrustify. The standard ROS 2 configuration does not
