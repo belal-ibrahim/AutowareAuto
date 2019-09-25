@@ -13,6 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef NDT__NDT_OPTIMIZATION_PROBLEM_HPP_
+#define NDT__NDT_OPTIMIZATION_PROBLEM_HPP_
+
 #include <ndt/ndt_representations.hpp>
 #include <optimization/optimization_problem.hpp>
 #include <geometry_msgs/msg/transform.hpp>
@@ -23,7 +26,8 @@ namespace autoware{
 namespace localization{
 namespace ndt{
 
-  class P2DNDTObjective : public common::optimization::Expression<P2DNDTObjective, geometry_msgs::msg::Transform, 1U, 6U>{
+  class NDT_PUBLIC P2DNDTObjective : public common::optimization::Expression<P2DNDTObjective, geometry_msgs::msg::Transform, 1U, 6U>{
+  public:
   // getting aliases from the base class.
   using ExpressionT = Expression<P2DNDTObjective, geometry_msgs::msg::Transform, 1U, 6U>;
   using DomainValue = typename ExpressionT::DomainValue;
@@ -50,7 +54,7 @@ namespace ndt{
 };
 
 // Here the class P2DNDTObjective
-class P2DNDTOptimizationProblem : public common::optimization::UnconstrainedOptimizationProblem<
+class NDT_PUBLIC P2DNDTOptimizationProblem : public common::optimization::UnconstrainedOptimizationProblem<
         P2DNDTOptimizationProblem, geometry_msgs::msg::Transform, 6U, P2DNDTObjective>{
 // Forward everything to the P2DNDTObjective? Possibly unnecessary.
 };
@@ -58,3 +62,5 @@ class P2DNDTOptimizationProblem : public common::optimization::UnconstrainedOpti
 }
 }
 }
+
+#endif

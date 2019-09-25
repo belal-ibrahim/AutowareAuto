@@ -13,13 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef NDT__NDT_REPRESENTATIONS_HPP_
+#define NDT__NDT_REPRESENTATIONS_HPP_
+
 #include <lidar_utils/point_cloud_utils.hpp>
 #include <ndt/visibility_control.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <geometry_msgs/msg/transform.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
 #include <vector>
-#include <Eigen/src/Core/Matrix.h>
+#include <Eigen/Core>
 
 namespace autoware{
 namespace localization{
@@ -90,3 +93,5 @@ private:
 }
 }
 }
+
+#endif

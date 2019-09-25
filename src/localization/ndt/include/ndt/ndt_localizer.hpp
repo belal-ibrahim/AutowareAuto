@@ -13,6 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef NDT__NDT_LOCALIZER_HPP_
+#define NDT__NDT_LOCALIZER_HPP_
+
 #include <localization_common/localizer_base.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <geometry_msgs/msg/transform.hpp>
@@ -60,3 +63,5 @@ class P2DNDTLocalizer : public NDTLocalizerBase<P2DNDTLocalizer<OptimizerT, Pose
 }
 }
 }
+
+#endif
