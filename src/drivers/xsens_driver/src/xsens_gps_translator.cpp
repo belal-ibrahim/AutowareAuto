@@ -89,10 +89,10 @@ void XsensGpsTranslator::parse_gnss(
   int32_t data_id,
   const std::vector<uint8_t> & content)
 {
-  (void)message;
-  (void)content;
-  switch (data_id & 0x00F0) {
-    case 0x10:
+  const GNSS value = GNSS_from_int(static_cast<uint8_t>(data_id & 0x00F0));
+
+  switch (value) {
+    case GNSS::PVT_DATA:
       {
         autoware::common::helper_functions::ByteReader byte_reader(content);
 
@@ -237,7 +237,7 @@ void XsensGpsTranslator::parse_gnss(
         message.altitude = height / 1e3;
       }
       break;
-    case 0x20:
+    case GNSS::SATELLITES_INFO:
       break;
   }
 }

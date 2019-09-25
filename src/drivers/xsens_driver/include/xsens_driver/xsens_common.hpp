@@ -161,6 +161,14 @@ enum class XDIGroup : uint16_t
 
 XSENS_DRIVER_PUBLIC XDIGroup XDIGroup_from_int(uint16_t value);
 
+enum class GNSS : uint8_t
+{
+  PVT_DATA = 0x10,
+  SATELLITES_INFO = 0x20,
+};
+
+XSENS_DRIVER_PUBLIC GNSS GNSS_from_int(uint8_t value);
+
 }  // namespace xsens_driver
 }  // namespace drivers
 }  // namespace autoware

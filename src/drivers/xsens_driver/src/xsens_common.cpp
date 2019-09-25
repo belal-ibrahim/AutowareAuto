@@ -162,6 +162,18 @@ XDIGroup XDIGroup_from_int(uint16_t value)
   }
 }
 
+GNSS GNSS_from_int(uint8_t value)
+{
+  switch (value) {
+    case 0x10:
+      return GNSS::PVT_DATA;
+    case 0x20:
+      return GNSS::SATELLITES_INFO;
+    default:
+      throw std::runtime_error("Unknown value: " + std::to_string(value));
+  }
+}
+
 }  // namespace xsens_driver
 }  // namespace drivers
 }  // namespace autoware
