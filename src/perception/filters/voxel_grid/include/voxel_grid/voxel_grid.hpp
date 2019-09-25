@@ -40,11 +40,12 @@ template<typename VoxelT>
 class VOXEL_GRID_PUBLIC VoxelGrid
 {
   using Grid = std::unordered_map<uint64_t, VoxelT>;
-  using IT = typename Grid::const_iterator;
-  using OutputQueue = std::forward_list<IT>;
   // TODO(c.ho) static assert for better error messages
 
 public:
+  using IT = typename Grid::const_iterator;
+  using OutputQueue = std::forward_list<IT>;
+
   /// \brief Constructor
   /// \param[in] cfg The configuration class
   explicit VoxelGrid(const Config & cfg)
@@ -58,20 +59,21 @@ public:
   }
 
   using point_t = typename VoxelT::point_t;
+
+  VoxelT & get_voxel(const point_t & pt, bool insert_if_not_found = false)
+  {
+    const uint64_t idx = m_config.index(pt);
+    return get_voxel(idx, insert_if_not_found);
+  }
+
   /// \brief Inserts a point into the voxel grid, may result in new voxels being activated
   /// \param[in] pt The point to insert
   void insert(const point_t & pt)
   {
     // Get voxel
     const uint64_t idx = m_config.index(pt);
-    // Check capacity if it would be a new voxel
-    if (m_map.end() == m_map.find(idx)) {
-      if (capacity() <= size()) {
-        throw std::length_error{"VoxelGrid: insertion would overrun capacity"};
-      }
-    }
     // TODO(c.ho) #2023 adding a new node allocates memory...
-    VoxelT & vx = m_map[idx];
+    VoxelT & vx = get_voxel(idx, true);
     // Add to new queue if newly activated, set up any stateful information
     if (!vx.occupied()) {
       // Set hint here, rationale:
@@ -182,6 +184,23 @@ public:
   }
 
 private:
+  VoxelT & get_voxel(const uint64_t & idx, bool insert_if_not_found = false)
+  {
+    // Check capacity if it would be a new voxel
+    if (m_map.end() == m_map.find(idx)) {
+      if (insert_if_not_found) {
+        if (capacity() <= size()) {
+          throw std::length_error{"VoxelGrid: insertion would overrun capacity"};
+        }
+      } else {
+        throw std::domain_error{"VoxelGrid: No voxel exists for the given point"};
+      }
+    }
+    // TODO(c.ho) #2023 adding a new node allocates memory...
+    VoxelT & vx = m_map[idx];
+    return vx;
+  }
+
   const Config m_config;
   Grid m_map;
   // Mechanisms to support output queueing in static memory
