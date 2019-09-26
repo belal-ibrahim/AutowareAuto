@@ -44,11 +44,19 @@ public:
   template<typename T>
   void read(T & value)
   {
-    std::size_t type_size = sizeof(T);
-    for (std::size_t i = 0U; i < type_size; ++i) {
-      std::memcpy(&value + i * sizeof(uint8_t), &byte_vector_[index_ + type_size - 1 - i], 1);
+    constexpr std::size_t kTypeSize = sizeof(T);
+    union {
+      T value;
+      uint8_t byte_vector[kTypeSize];
+    } tmp;
+
+    for (std::size_t i = 0; i < kTypeSize; ++i) {
+      tmp.byte_vector[i] = byte_vector_[index_ + kTypeSize - 1 - i];
     }
-    index_ += type_size;
+
+    value = tmp.value;
+
+    index_ += kTypeSize;
   }
 
   void skip(std::size_t count)
