@@ -100,17 +100,7 @@ void XsensImuTranslator::parse_acceleration(
   int32_t data_id,
   const std::vector<uint8_t> & content)
 {
-  switch (data_id & 0x000C) {
-    case 0x00:
-      message.header.frame_id = "ENU";
-      break;
-    case 0x04:
-      message.header.frame_id = "NED";
-      break;
-    case 0x08:
-      message.header.frame_id = "NWU";
-      break;
-  }
+  parse_xdi_coordinates(data_id, message);
 
   if (use_double_precision(data_id)) {
     parse_acceleration_internal<double>(message, content);
@@ -143,17 +133,7 @@ void XsensImuTranslator::parse_orientation_data(
   int32_t data_id,
   const std::vector<uint8_t> & content)
 {
-  switch (data_id & 0x000C) {
-    case 0x00:
-      message.header.frame_id = "ENU";
-      break;
-    case 0x04:
-      message.header.frame_id = "NED";
-      break;
-    case 0x08:
-      message.header.frame_id = "NWU";
-      break;
-  }
+  parse_xdi_coordinates(data_id, message);
 
   switch (data_id & 0x00F0) {
     case 0x10:
@@ -178,17 +158,7 @@ void XsensImuTranslator::parse_angular_velocity(
   int32_t data_id,
   const std::vector<uint8_t> & content)
 {
-  switch (data_id & 0x000C) {
-    case 0x00:
-      message.header.frame_id = "ENU";
-      break;
-    case 0x04:
-      message.header.frame_id = "NED";
-      break;
-    case 0x08:
-      message.header.frame_id = "NWU";
-      break;
-  }
+  parse_xdi_coordinates(data_id, message);
 
   switch (data_id & 0x00F0) {
     case 0x20:
@@ -251,6 +221,23 @@ void XsensImuTranslator::parse_angular_velocity_rate_of_turn(
   message.angular_velocity.y = values[1];
   message.angular_velocity.z = values[2];
 }
+
+void XsensImuTranslator::parse_xdi_coordinates(
+  int32_t data_id, sensor_msgs::msg::Imu & message)
+{
+  switch (data_id & 0x000C) {
+    case 0x00:
+      message.header.frame_id = "ENU";
+      break;
+    case 0x04:
+      message.header.frame_id = "NED";
+      break;
+    case 0x08:
+      message.header.frame_id = "NWU";
+      break;
+  }
+}
+
 }  // namespace xsens_driver
 }  // namespace drivers
 }  // namespace autoware

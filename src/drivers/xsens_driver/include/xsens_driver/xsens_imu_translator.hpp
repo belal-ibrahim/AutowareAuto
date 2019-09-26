@@ -90,6 +90,10 @@ private:
     sensor_msgs::msg::Imu & message,
     int32_t data_id,
     const std::vector<uint8_t> & content);
+
+  void parse_xdi_coordinates(
+    int32_t data_id,
+    sensor_msgs::msg::Imu & message);
 };  // class Driver
 }  // namespace xsens_driver
 }  // namespace drivers
