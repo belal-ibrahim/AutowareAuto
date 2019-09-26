@@ -14,3 +14,7 @@
 // limitations under the License.
 
 #include "xsens_node/xsens_imu_node.hpp"
+
+template class autoware::drivers::xsens_node::XsensCommonNode<
+  autoware::drivers::xsens_driver::XsensImuTranslator, sensor_msgs::msg::Imu
+>;
