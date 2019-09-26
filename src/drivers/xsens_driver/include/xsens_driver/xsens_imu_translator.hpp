@@ -101,7 +101,7 @@ private:
   {
     std::array<T, kNumber_of_values> values;
 
-    autoware::common::helper_functions::ByteReader byte_reader(content);
+    common::helper_functions::ByteReader byte_reader(content);
 
     for (std::size_t i = 0; i < kNumber_of_values; ++i) {
       byte_reader.read(values[i]);
