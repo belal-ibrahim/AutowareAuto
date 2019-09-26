@@ -16,5 +16,5 @@
 #include "xsens_node/xsens_gps_node.hpp"
 
 template class autoware::drivers::xsens_node::XsensCommonNode<
-  autoware::drivers::xsens_driver::XsensGpsTranslator, sensor_msgs::msg::NavSatFix
+    autoware::drivers::xsens_driver::XsensGpsTranslator, sensor_msgs::msg::NavSatFix
 >;
