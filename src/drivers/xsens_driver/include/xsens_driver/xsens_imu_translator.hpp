@@ -25,6 +25,7 @@
 #include <mutex>
 #include <vector>
 #include "sensor_msgs/msg/imu.hpp"
+#include "helper_functions/byte_reader.hpp"
 
 namespace autoware
 {
@@ -94,6 +95,19 @@ private:
   void parse_xdi_coordinates(
     int32_t data_id,
     sensor_msgs::msg::Imu & message);
+
+  template<typename T, std::size_t kNumber_of_values>
+  std::array<T, kNumber_of_values> read_values(const std::vector<uint8_t> & content)
+  {
+    std::array<T, kNumber_of_values> values;
+
+    autoware::common::helper_functions::ByteReader byte_reader(content);
+
+    for (std::size_t i = 0; i < kNumber_of_values; ++i) {
+      byte_reader.read(values[i]);
+    }
+    return values;
+  }
 };  // class Driver
 }  // namespace xsens_driver
 }  // namespace drivers

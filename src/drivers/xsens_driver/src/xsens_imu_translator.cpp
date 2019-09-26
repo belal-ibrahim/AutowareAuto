@@ -114,14 +114,7 @@ void XsensImuTranslator::parse_acceleration_internal(
   sensor_msgs::msg::Imu & message,
   const std::vector<uint8_t> & content)
 {
-  constexpr std::size_t kNumber_of_values = 3;
-  MessageT values[kNumber_of_values];
-
-  autoware::common::helper_functions::ByteReader byte_reader(content);
-
-  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
-    byte_reader.read(values[i]);
-  }
+  std::array<MessageT, 3> values = read_values<MessageT, 3>(content);
 
   message.linear_acceleration.x = values[0];
   message.linear_acceleration.y = values[1];
@@ -188,14 +181,7 @@ void XsensImuTranslator::parse_orientation_quaternion(
   sensor_msgs::msg::Imu & message,
   const std::vector<uint8_t> & content)
 {
-  constexpr std::size_t kNumber_of_values = 4;
-  MessageT values[kNumber_of_values];
-
-  autoware::common::helper_functions::ByteReader byte_reader(content);
-
-  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
-    byte_reader.read(values[i]);
-  }
+  std::array<MessageT, 4> values = read_values<MessageT, 4>(content);
 
   message.orientation.x = values[0];
   message.orientation.y = values[1];
@@ -208,14 +194,7 @@ void XsensImuTranslator::parse_angular_velocity_rate_of_turn(
   sensor_msgs::msg::Imu & message,
   const std::vector<uint8_t> & content)
 {
-  constexpr std::size_t kNumber_of_values = 3;
-  MessageT values[kNumber_of_values];
-
-  autoware::common::helper_functions::ByteReader byte_reader(content);
-
-  for (std::size_t i = 0; i < kNumber_of_values; ++i) {
-    byte_reader.read(values[i]);
-  }
+  std::array<MessageT, 3> values = read_values<MessageT, 3>(content);
 
   message.angular_velocity.x = values[0];
   message.angular_velocity.y = values[1];
