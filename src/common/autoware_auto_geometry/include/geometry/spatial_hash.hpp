@@ -35,6 +35,58 @@ namespace geometry
 namespace spatial_hash
 {
 
+/// \brief Wrapper class around an iterator and a distance (from some query point).
+/// It aims to provide easy access to points from a spatial hash.
+template<typename PointT>
+class HashOutput
+{
+  using IT = typename std::unordered_multimap<Index, PointT>::const_iterator;
+
+public:
+  /// \brief Constructor
+  /// \param[in] iterator An iterator pointing to some point
+  /// \param[in] distance The euclidean distance (2d or 3d) to a reference point
+  HashOutput(const IT iterator, const float32_t distance)
+  : m_iterator(iterator),
+    m_distance(distance)
+  {
+  }
+  /// \brief Get stored point
+  /// \return A const reference to the stored point
+  const PointT & get_point() const
+  {
+    return m_iterator->second;
+  }
+  /// \brief Get underlying iterator
+  /// \return A copy of the underlying iterator
+  IT get_iterator() const
+  {
+    return m_iterator;
+  }
+  /// \brief Convert to underlying point
+  /// \return A reference to the underlying point
+  operator const PointT &() const
+  {
+    return get_point();
+  }
+  /// \brief Convert to underlying iterator
+  /// \return A copy of the iterator
+  operator IT() const
+  {
+    return get_iterator();
+  }
+  /// \brief Get distance to reference point
+  /// \return The distance
+  float32_t get_distance() const
+  {
+    return m_distance;
+  }
+
+private:
+  IT m_iterator;
+  float32_t m_distance;
+};      // class HashOutput
+
 /// \brief An implementation of the spatial hash or integer lattice data structure for efficient
 ///        (O(1)) near neighbor queries.
 /// \tparam PointT The point type stored in this data structure. Must have float members x, y, and z
@@ -42,7 +94,7 @@ namespace spatial_hash
 /// This implementation can support both 2D and 3D queries
 /// (though only one type per data structure), and can support queries of varying radius. This data
 /// structure cannot do near neighbor lookups for euclidean distance in arbitrary dimensions.
-template<typename PointT, typename ConfigT>
+template<typename PointT, typename ConfigT, typename OutputT = HashOutput<PointT>>
 class GEOMETRY_PUBLIC SpatialHashBase
 {
   using Index3 = details::Index3;
@@ -54,53 +106,7 @@ public:
   using Hash = std::unordered_multimap<Index, PointT>;
   using IT = typename Hash::const_iterator;
   /// \brief Wrapper around an iterator and a distance (from some query point)
-  class Output
-  {
-public:
-    /// \brief Constructor
-    /// \param[in] iterator An iterator pointing to some point
-    /// \param[in] distance The euclidean distance (2d or 3d) to a reference point
-    Output(const IT iterator, const float32_t distance)
-    : m_iterator(iterator),
-      m_distance(distance)
-    {
-    }
-    /// \brief Get stored point
-    /// \return A const reference to the stored point
-    const PointT & get_point() const
-    {
-      return m_iterator->second;
-    }
-    /// \brief Get underlying iterator
-    /// \return A copy of the underlying iterator
-    IT get_iterator() const
-    {
-      return m_iterator;
-    }
-    /// \brief Convert to underlying point
-    /// \return A reference to the underlying point
-    operator const PointT &() const
-    {
-      return get_point();
-    }
-    /// \brief Convert to underlying iterator
-    /// \return A copy of the iterator
-    operator IT() const
-    {
-      return get_iterator();
-    }
-    /// \brief Get distance to reference point
-    /// \return The distance
-    float32_t get_distance() const
-    {
-      return m_distance;
-    }
-
-private:
-    IT m_iterator;
-    float32_t m_distance;
-  };  // class Output
-  using OutputVector = typename std::vector<Output>;
+  using OutputVector = typename std::vector<OutputT>;
 
   /// \brief Constructor
   /// \param[in] cfg The configuration object for this class
@@ -272,20 +278,23 @@ private:
 /// \brief The class to be used for specializing on
 /// apex_app::common::geometry::spatial_hash::SpatialHashBase to provide different function
 /// signatures on 2D and 3D configurations
-/// \tparam PointT The point type stored in this data structure. Must have float members x, y and z
-template<typename PointT, typename ConfigT>
+/// \tparam PointT The point type stored in this data structure. Must have float members x, y and z+
+/// \tparam OutputT The output type stored in this data structure.
+template<typename PointT, typename ConfigT, typename OutputT = HashOutput<PointT>>
 class GEOMETRY_PUBLIC SpatialHash;
 
 /// \brief Explicit specialization of SpatialHash for 2D configuration
 /// \tparam PointT The point type stored in this data structure.
-template<typename PointT>
-class GEOMETRY_PUBLIC SpatialHash<PointT, Config2d>: public SpatialHashBase<PointT, Config2d>
+/// \tparam OutputT The output type stored in this data structure.
+template<typename PointT, typename OutputT>
+class GEOMETRY_PUBLIC SpatialHash<PointT, Config2d, OutputT>: public SpatialHashBase<PointT,
+    Config2d, OutputT>
 {
 public:
-  using OutputVector = typename SpatialHashBase<PointT, Config2d>::OutputVector;
+  using OutputVector = typename SpatialHashBase<PointT, Config2d, OutputT>::OutputVector;
 
   explicit SpatialHash(const Config2d & cfg)
-  : SpatialHashBase<PointT, Config2d>(cfg) {}
+  : SpatialHashBase<PointT, Config2d, OutputT>(cfg) {}
 
   /// \brief Finds all points within a fixed radius of a reference point
   /// \param[in] x The x component of the reference point
@@ -311,14 +320,16 @@ public:
 
 /// \brief Explicit specialization of SpatialHash for 3D configuration
 /// \tparam PointT The point type stored in this data structure. Must have float members x, y and z
-template<typename PointT>
-class GEOMETRY_PUBLIC SpatialHash<PointT, Config3d>: public SpatialHashBase<PointT, Config3d>
+/// \tparam OutputT The output type stored in this data structure.
+template<typename PointT, typename OutputT>
+class GEOMETRY_PUBLIC SpatialHash<PointT, Config3d, OutputT>
+  : public SpatialHashBase<PointT, Config3d, OutputT>
 {
 public:
-  using OutputVector = typename SpatialHashBase<PointT, Config3d>::OutputVector;
+  using OutputVector = typename SpatialHashBase<PointT, Config3d, OutputT>::OutputVector;
 
   explicit SpatialHash(const Config3d & cfg)
-  : SpatialHashBase<PointT, Config3d>(cfg) {}
+  : SpatialHashBase<PointT, Config3d, OutputT>(cfg) {}
 
   /// \brief Finds all points within a fixed radius of a reference point
   /// \param[in] x The x component of the reference point
@@ -344,10 +355,10 @@ public:
   }
 };
 
-template<typename T>
-using SpatialHash2d = SpatialHash<T, Config2d>;
-template<typename T>
-using SpatialHash3d = SpatialHash<T, Config3d>;
+template<typename T, typename OutT = HashOutput<T>>
+using SpatialHash2d = SpatialHash<T, Config2d, OutT>;
+template<typename T, typename OutT = HashOutput<T>>
+using SpatialHash3d = SpatialHash<T, Config3d, OutT>;
 }  // namespace spatial_hash
 }  // namespace geometry
 }  // namespace common

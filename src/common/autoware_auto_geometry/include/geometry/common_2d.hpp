@@ -95,6 +95,22 @@ float32_t & zr_(PointT & pt)
 {
   return pt.z;
 }
+
+/// \brief Sets the values for a 3D point
+/// \tparam PointT Point type
+/// \tparam ScalarT Scalar value type
+/// \param[in,out] pt point to be updated
+/// \param x x value
+/// \param y y value
+/// \param z z value
+template<typename PointT, typename ScalarT>
+void set_point(PointT & pt, ScalarT x, ScalarT y, ScalarT z)
+{
+  pt.x = x;
+  pt.y = y;
+  pt.z = z;
+}
+
 }  // namespace point_adapter
 
 /// \tparam T point type. Must have point adapters defined or have float members x and y
