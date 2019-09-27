@@ -13,6 +13,9 @@ find_package(lidar_utils REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(voxel_grid REQUIRED)
+find_package(autoware_auto_geometry REQUIRED)
+find_package(autoware_auto_helper_functions REQUIRED)
 
 # includes
 include_directories(include)
@@ -26,6 +29,7 @@ set(NDT_NODES_LIB_HEADERS
     include/ndt/visibility_control.hpp
     include/ndt/ndt_representations.hpp
     include/ndt/ndt_optimization_problem.hpp
+    include/ndt/ndt_map.hpp
     include/ndt/ndt_localizer.hpp)
 
 add_library(
@@ -36,12 +40,15 @@ ${PROJECT_NAME} SHARED
 autoware_set_compile_options(${PROJECT_NAME})
 
 ament_target_dependencies(${PROJECT_NAME} "localization_common" "optimization" "lidar_utils"
-        "sensor_msgs" "geometry_msgs" "eigen3")
+        "sensor_msgs" "geometry_msgs" "eigen3" "voxel_grid" "autoware_auto_geometry" "autoware_auto_helper_functions")
 
+# required for tf2
 target_compile_options(${PROJECT_NAME} PRIVATE -Wno-sign-conversion -Wno-conversion -Wno-old-style-cast
         -Wno-useless-cast -Wno-double-promotion -Wno-nonnull-compare -Wuseless-cast)
 
 autoware_install(HAS_INCLUDE)
+ament_export_dependencies("sensor_msgs" "geometry_msgs" "eigen3" "voxel_grid")
+
 ament_package(
                     CONFIG_EXTRAS_POST "ndt-extras.cmake"
 )
