@@ -42,6 +42,22 @@ autoware_set_compile_options(${PROJECT_NAME})
 ament_target_dependencies(${PROJECT_NAME} "localization_common" "optimization" "lidar_utils"
         "sensor_msgs" "geometry_msgs" "eigen3" "voxel_grid" "autoware_auto_geometry" "autoware_auto_helper_functions")
 
+
+if(BUILD_TESTING)
+  # run linters
+  autoware_static_code_analysis()
+
+  # gtest
+  set(NDT_TEST ndt_gtest)
+
+  find_package(ament_cmake_gtest REQUIRED)
+
+  ament_add_gtest(${NDT_TEST} test/src/test_ndt_map.cpp)
+  target_link_libraries(${NDT_TEST} ${PROJECT_NAME})
+  target_include_directories(${NDT_TEST} PRIVATE "test/include" "include")
+  ament_target_dependencies(${NDT_TEST} ${PROJECT_NAME})
+endif()
+
 # required for tf2
 target_compile_options(${PROJECT_NAME} PRIVATE -Wno-sign-conversion -Wno-conversion -Wno-old-style-cast
         -Wno-useless-cast -Wno-double-promotion -Wno-nonnull-compare -Wuseless-cast)
