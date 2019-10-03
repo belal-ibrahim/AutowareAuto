@@ -66,10 +66,8 @@ TEST_F(serial_driver, basic)
       "serial_driver_node",
       "serial_topic",
       name,
-      38400,
-      flow_control_t::software,
-      parity_t::even,
-      stop_bits_t::one);
+      TestDriver::SerialPortConfig {38400, flow_control_t::software, parity_t::even, stop_bits_t::one}
+      );
 
     for (auto val : values) {
       write(master_fd, reinterpret_cast<char *>(&val), sizeof(val));

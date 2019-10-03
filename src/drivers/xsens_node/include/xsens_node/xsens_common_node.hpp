@@ -63,10 +63,10 @@ public:
     const std::string & node_name,
     const std::string & topic,
     const std::string & device_name,
-    uint32_t baud_rate,
-    flow_control_t flow_control,
-    parity_t parity,
-    stop_bits_t stop_bits,
+    const typename autoware::drivers::serial_driver::SerialDriverNode<XsensCommonNode<TranslatorT,
+    MessageT>,
+    typename TranslatorT::Packet, MessageT>
+    ::SerialPortConfig & serial_port_config,
     const std::string & frame_id,
     const typename TranslatorT::Config & config)
   : autoware::drivers::serial_driver::SerialDriverNode<XsensCommonNode<TranslatorT, MessageT>,
@@ -74,10 +74,7 @@ public:
       node_name,
       topic,
       device_name,
-      baud_rate,
-      flow_control,
-      parity,
-      stop_bits),
+      serial_port_config),
     m_translator(config),
     m_frame_id(frame_id)
   {
