@@ -52,10 +52,8 @@ public:
   /// \param[in] node_name name of the node for rclcpp internals
   /// \param[in] topic Name of the topic to publish output on
   /// \param[in] device_name Name of the serial device.
-  /// \param[in] baud_rate Baud rate to read from the serial port.
-  /// \param[in] flow_control Whether to use hardware, software or no flow control.
-  /// \param[in] parity Parity of the serial transmission.
-  /// \param[in] stop_bits Stop bits of the serial transmission.
+  /// \param[in] serial_port_config config struct with baud_rate, flow_control, parity and
+  /// stop_bits params
   /// \param[in] frame_id Frame id for the published point cloud messages
   /// \param[in] config Config struct with rpm, transform, radial and angle pruning params
   /// \throw std::runtime_error If cloud_size is not sufficiently large

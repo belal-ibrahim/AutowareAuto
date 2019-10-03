@@ -70,6 +70,11 @@ public:
   class SerialPortConfig
   {
 public:
+    /// \brief Default constructor, configuration class
+    /// \param[in] baud_rate Baud rate to read from the serial port.
+    /// \param[in] flow_control Whether to use hardware, software or no flow control.
+    /// \param[in] parity Parity of the serial transmission.
+    /// \param[in] stop_bits Stop bits of the serial transmission.
     SerialPortConfig(
       uint32_t baud_rate,
       flow_control_t flow_control,
@@ -110,11 +115,10 @@ private:
   /// \param[in] node_name name of the node for rclcpp internals.
   /// \param[in] topic Name of the topic to publish output on.
   /// \param[in] device_name Name of the serial device.
-  /// \param[in] baud_rate Baud rate to read from the serial port.
-  /// \param[in] flow_control Whether to use hardware, software or no flow control.
-  /// \param[in] parity Parity of the serial transmission.
-  /// \param[in] stop_bits Stop bits of the serial transmission.
   /// \param[in] history_depth Size of the publisher's queue.
+  /// \param[in] history_depth Size of the publisher's queue.
+  /// \param[in] serial_port_config config struct with baud_rate, flow_control, parity and
+  /// stop_bits params
   /// \throw runtime error if failed to start threads or configure driver.
   SerialDriverNode(
     const std::string & node_name,

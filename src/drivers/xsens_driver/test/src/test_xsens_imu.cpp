@@ -1,4 +1,3 @@
-
 // Copyright 2018 Apex.AI, Inc.
 // Co-developed by Tier IV, Inc. and Apex.AI, Inc.
 //
