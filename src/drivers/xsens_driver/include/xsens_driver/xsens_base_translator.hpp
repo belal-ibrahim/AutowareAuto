@@ -124,6 +124,7 @@ public:
           } else {
             if (current_mid_ == MID::MT_DATA) {
               // TODO(esteve): parse legacy data
+              throw std::runtime_error("Legacy data not supported yet");
             } else if (current_mid_ == MID::MT_DATA2) {
               parse_mtdata2(output);
             }
