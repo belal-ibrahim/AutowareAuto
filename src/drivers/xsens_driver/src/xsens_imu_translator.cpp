@@ -138,11 +138,13 @@ void XsensImuTranslator::parse_orientation_data(
       }
       break;
     case 0x20:
+      // TODO(esteve): implement
       // Rotation Matrix
-      break;
+      throw std::runtime_error("Rotation matrix not supported yet");
     case 0x30:
+      // TODO(esteve): implement
       // Euler Angles
-      break;
+      throw std::runtime_error("Euler angles not supported yet");
   }
 }
 
