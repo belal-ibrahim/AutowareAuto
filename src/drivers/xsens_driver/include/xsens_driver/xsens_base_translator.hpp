@@ -1,4 +1,4 @@
-// Copyright 2018 Apex.AI, Inc.
+// Copyright 2019 Apex.AI, Inc.
 // Co-developed by Tier IV, Inc. and Apex.AI, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// \copyright Copyright 2017-2018 Apex.AI, Inc.
+/// \copyright Copyright 2017-2019 Apex.AI, Inc.
 
 #ifndef XSENS_DRIVER__XSENS_BASE_TRANSLATOR_HPP_
 #define XSENS_DRIVER__XSENS_BASE_TRANSLATOR_HPP_
