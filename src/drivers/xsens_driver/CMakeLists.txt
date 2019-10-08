@@ -18,18 +18,22 @@ cmake_minimum_required(VERSION 3.5)
 project(xsens_driver)
 
 ## dependencies
+find_package(ament_cmake_auto REQUIRED)
 find_package(autoware_auto_cmake REQUIRED)
-find_package(autoware_auto_helper_functions REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(ament_cmake REQUIRED)
-find_package(lidar_utils REQUIRED)
-find_package(sensor_msgs REQUIRED)
+find_package(ament_cmake_ros REQUIRED)
+
+ament_auto_find_build_dependencies(REQUIRED ${requirement_dependencies})
 
 include_directories(include)
 
-
 ### Build driver library
-add_library(${PROJECT_NAME} SHARED
+set(required_dependencies
+  "autoware_auto_helper_functions"
+  "lidar_utils"
+  "sensor_msgs"
+)
+
+ament_auto_add_library(${PROJECT_NAME}
         "include/xsens_driver/xsens_common.hpp"
         "include/xsens_driver/xsens_base_translator.hpp"
         "include/xsens_driver/xsens_imu_translator.hpp"
@@ -41,10 +45,7 @@ add_library(${PROJECT_NAME} SHARED
         "src/xsens_imu_translator.cpp")
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 ament_target_dependencies(${PROJECT_NAME}
-  "autoware_auto_helper_functions"
-  "lidar_utils"
-  "sensor_msgs"
-)
+  ${required_dependencies})
 autoware_set_compile_options(${PROJECT_NAME})
 
 ## Testing
@@ -68,4 +69,4 @@ if(BUILD_TESTING)
 endif()
 
 autoware_install(LIBRARIES ${PROJECT_NAME} HAS_INCLUDE)
-ament_package()
+ament_auto_package()
