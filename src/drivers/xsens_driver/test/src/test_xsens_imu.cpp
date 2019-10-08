@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include "xsens_driver/xsens_imu_translator.hpp"
+#include "xsens_driver/test_xsens_common.hpp"
 
 #include <iostream>
 #include <chrono>
@@ -24,18 +25,8 @@
 #include <sensor_msgs/msg/imu.hpp>
 
 using autoware::drivers::xsens_driver::XsensImuTranslator;
-using autoware::drivers::xsens_driver::MID;
 
-class xsens_driver : public ::testing::Test
-{
-public:
-  xsens_driver()
-  {}
-
-protected:
-  XsensImuTranslator::Packet pkt;
-  sensor_msgs::msg::Imu out;
-};  // class xsens_driver
+using xsens_driver = xsens_driver_common<XsensImuTranslator, sensor_msgs::msg::Imu>;
 
 TEST_F(xsens_driver, basic)
 {
@@ -51,24 +42,7 @@ TEST_F(xsens_driver, basic)
     0x58, 0x97, 0x24
   };
 
-  const XsensImuTranslator::Config cfg{};
-  XsensImuTranslator driver(cfg);
-  pkt.data = 0xFA;
-  ASSERT_FALSE(driver.convert(pkt, out));
-  pkt.data = 0xFF;
-  ASSERT_FALSE(driver.convert(pkt, out));
-  pkt.data = static_cast<std::underlying_type_t<MID>>(MID::MT_DATA2);
-  ASSERT_FALSE(driver.convert(pkt, out));
-  uint8_t length = data.size() - 1;
-  pkt.data = length;
-  ASSERT_FALSE(driver.convert(pkt, out));
-
-  for(uint8_t i = 0; i < length; ++i) {
-    pkt.data = data[i];
-    ASSERT_FALSE(driver.convert(pkt, out));
-  }
-  pkt.data = data[length];
-  ASSERT_TRUE(driver.convert(pkt, out));
+  xsens_driver_common_test(data);
 }
 
 int32_t main(int32_t argc, char ** argv)

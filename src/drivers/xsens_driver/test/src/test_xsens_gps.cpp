@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include "xsens_driver/xsens_gps_translator.hpp"
+#include "xsens_driver/test_xsens_common.hpp"
 
 #include <iostream>
 #include <chrono>
@@ -26,16 +27,7 @@
 using autoware::drivers::xsens_driver::XsensGpsTranslator;
 using autoware::drivers::xsens_driver::MID;
 
-class xsens_driver : public ::testing::Test
-{
-public:
-  xsens_driver()
-  {}
-
-protected:
-  XsensGpsTranslator::Packet pkt;
-  sensor_msgs::msg::NavSatFix out;
-};  // class xsens_driver
+using xsens_driver = xsens_driver_common<XsensGpsTranslator, sensor_msgs::msg::NavSatFix>;
 
 TEST_F(xsens_driver, basic)
 {
@@ -49,28 +41,7 @@ TEST_F(xsens_driver, basic)
     0x2B, 0x10, 0x60, 0x04, 0x22, 0xD5, 0x58, 0x97, 0x2A
   };
 
-  const XsensGpsTranslator::Config cfg{};
-  XsensGpsTranslator driver(cfg);
-  pkt.data = 0xFA;
-  ASSERT_FALSE(driver.convert(pkt, out));
-  pkt.data = 0xFF;
-  ASSERT_FALSE(driver.convert(pkt, out));
-  pkt.data = static_cast<std::underlying_type_t<MID>>(MID::MT_DATA2);
-  ASSERT_FALSE(driver.convert(pkt, out));
-  uint8_t length = data.size() - 1;
-  pkt.data = length;
-  ASSERT_FALSE(driver.convert(pkt, out));
-
-  for(uint8_t i = 0; i < length; ++i) {
-    pkt.data = data[i];
-    ASSERT_FALSE(driver.convert(pkt, out));
-  }
-  pkt.data = data[length];
-  ASSERT_TRUE(driver.convert(pkt, out));
-
-  ASSERT_FLOAT_EQ(37.4246, out.latitude);
-  ASSERT_FLOAT_EQ(-122.10012, out.longitude);
-  ASSERT_FLOAT_EQ(-16.188999, out.altitude);
+  xsens_driver_common_test(data);
 }
 
 int32_t main(int32_t argc, char ** argv)
