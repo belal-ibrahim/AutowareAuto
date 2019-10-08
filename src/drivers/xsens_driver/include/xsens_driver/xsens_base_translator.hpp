@@ -146,20 +146,25 @@ public:
   {
     auto data = raw_message_;
 
+    // Read bytes from the byte vector until there are no more messages left
     while (!data.empty()) {
       const int32_t data_id = data[1] | data[0] << 8;
       const int32_t message_size = data[2];
 
+      // Create a slice from the byte vector, skipping the first three bytes (data_id and
+      // message_size)
       auto content = decltype(data)(
         std::begin(data) + 3,
         std::begin(data) + 3 + message_size);
 
+      // Overwrite data with the bytes after the slice
       data = decltype(data)(
         std::begin(data) + 3 + message_size,
         std::end(data));
 
       int32_t group = data_id & 0xF800;
       XDIGroup xdigroup = XDIGroup_from_int(static_cast<uint16_t>(group));
+      // Dispatch the rest of the parsing to the translator specialization via CRTP
       this->impl().parse_xdigroup_mtdata2(xdigroup, output, data_id, content);
     }
   }
