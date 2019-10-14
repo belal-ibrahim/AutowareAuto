@@ -77,6 +77,8 @@ enum class MID : uint8_t
   RUN_SELFTEST = 0x24,
   // Self test results, 2 bytes
   SELFTEST_ACK = 0x25,
+  // GNSS platform setting, 2 bytes (only MTi-G-700/710 with FW1.7 or higher)
+  SET_GNSS_PLATFORM = 0x76,
   // Error mode, 2 bytes, 0000, 0001, 0002, 0003 (default 0001)
   SET_ERROR_MODE = 0xDA,
   // Transmit delay (RS485), 2 bytes, number of clock ticks (1/29.4912 MHz)
