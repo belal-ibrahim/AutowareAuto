@@ -142,6 +142,8 @@ enum class MID : uint8_t
   SET_LAT_LON_ALT = 0x6E,
   // Initiate No Rotation procedure (not on MTi-G), 2 bytes
   SET_NO_ROTATION = 0x22,
+  // In-run Compass Calibration (ICC) command, 1 byte
+  ICC_COMMAND = 0x74,
 };
 
 XSENS_DRIVER_PUBLIC MID MID_from_int(uint16_t value);
