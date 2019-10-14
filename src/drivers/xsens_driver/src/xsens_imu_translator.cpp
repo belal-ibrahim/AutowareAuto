@@ -177,6 +177,8 @@ void XsensImuTranslator::parse_angular_velocity(
         parse_angular_velocity_rate_of_turn<float>(message, content);
       }
       break;
+    default:
+      throw std::runtime_error("Unknown data_id: " + +data_id);
   }
 }
 
