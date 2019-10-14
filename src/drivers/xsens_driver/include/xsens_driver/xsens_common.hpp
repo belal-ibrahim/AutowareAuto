@@ -59,6 +59,10 @@ enum class MID : uint8_t
   REQ_PRODUCT_CODE = 0x1C,
   // Product code (max 20 bytes data)
   PRODUCT_CODE = 0x1D,
+  // Request hardware version
+  REQ_HARDWARE_VERSION = 0x1E,
+  // Hardware version
+  HARDWARE_VERSION = 0x1F,
   // Request firmware revision
   REQ_FW_REV = 0x12,
   // Firmware revision, 3 bytes: major minor rev
