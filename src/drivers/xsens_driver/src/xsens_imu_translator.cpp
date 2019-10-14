@@ -145,6 +145,8 @@ void XsensImuTranslator::parse_orientation_data(
       // TODO(esteve): implement
       // Euler Angles
       throw std::runtime_error("Euler angles not supported yet");
+    default:
+      throw std::runtime_error("Unknown data_id: " + +data_id);
   }
 }
 
